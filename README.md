@@ -36,17 +36,15 @@ Flutter
 Getting Started
 
 Python
-	1.	Install dependencies:
+1.	Install dependencies:
 
-pip install ultralytics opencv-python pygame gTTS
+		pip install ultralytics opencv-python pygame gTTS	
 
+2.	Run the detection script:
+    
+		python booktracker.py
 
-	2.	Run the detection script:
-
-python booktracker.py
-
-
-	3.	Ensure a webcam or IP camera is connected.
+ 3.	Ensure a webcam or IP camera is connected.
 
 Flutter
 	1.	Place the TFLite model and labels file in the assets/ folder.
