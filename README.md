@@ -62,8 +62,3 @@ Future Enhancements
 	•	Improved detection performance for low-end devices.
 	•	Multi-language TTS support.
 
-License
-
-This project is licensed under the MIT License. Feel free to use and modify it as needed.
-
-Empowering accessibility through real-time guidance!
