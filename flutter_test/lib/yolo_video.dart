@@ -32,7 +32,7 @@ class _YoloVideoState extends State<YoloVideo> {
   static const int noDetectionThreshold = 2; //seconds
 
   //confidence threshold for a valid detection
-  final double confidenceThreshold = 0.3;
+  final double confidenceThreshold = 0.2;
 
   // store screen size from build
   Size _screenSize = Size.zero;
@@ -67,7 +67,7 @@ class _YoloVideoState extends State<YoloVideo> {
       }
       controller = CameraController(
         cameras[0],
-        ResolutionPreset.max,
+        ResolutionPreset.ultraHigh,
       );
       await controller.initialize();
 
@@ -89,10 +89,9 @@ class _YoloVideoState extends State<YoloVideo> {
   Future<void> yoloOnFrame(CameraImage image) async {
     final result = await vision.yoloOnFrame(
       bytesList: image.planes.map((plane) => plane.bytes).toList(),
-      imageHeight: 1440,
-      imageWidth: 1080,
+      imageHeight: image.height,
+      imageWidth: image.width,
       iouThreshold: 0.4,
-      confThreshold: 0.1,
       classThreshold: 0.1,
     );
 
@@ -128,15 +127,13 @@ class _YoloVideoState extends State<YoloVideo> {
   void processDetections(
       List<Map<String, dynamic>> detections, Size screenSize) {
     final bookDetections = detections.where((d) {
-      if (d.containsKey("cls") &&
-          d["cls"] is List &&
-          d["cls"].isNotEmpty &&
+      if (d.containsKey("tag") &&
           d.containsKey("box") &&
-          (d["box"] is List) &&
-          (d["box"].length >= 5)) {
-        int clsValue = int.tryParse(d["cls"][0].toString()) ?? -1;
-        double conf = double.tryParse(d["box"][0].toString()) ?? 0.0;
-        return clsValue == 74 && conf >= confidenceThreshold;
+          d["box"] is List &&
+          d["box"].length >= 5) {
+        String tag = d["tag"].toString().toLowerCase();
+        double conf = double.tryParse(d["box"][4].toString()) ?? 0.0;
+        return tag == "book" && conf >= confidenceThreshold;
       }
       return false;
     }).toList();
@@ -231,66 +228,6 @@ class _YoloVideoState extends State<YoloVideo> {
     await flutterTts.speak(text);
   }
 
-  /// This method overlays bounding boxes for detected objects.
-  List<Widget> displayBoxes(Size screen) {
-    if (yoloResults.isEmpty || cameraImage == null) return [];
-
-    double factorX = screen.width / (cameraImage?.height ?? 1);
-    double factorY = screen.height / (cameraImage?.width ?? 1);
-
-    return yoloResults.map((result) {
-      double x1 = result["box"][0] * factorX;
-      double y1 = result["box"][1] * factorY;
-      double boxWidth = (result["box"][2] - result["box"][0]) * factorX;
-      double boxHeight = (result["box"][3] - result["box"][1]) * factorY;
-
-      if (!result.containsKey("cls") ||
-          !(result["cls"] is List) ||
-          result["cls"].isEmpty ||
-          int.tryParse(result["cls"][0].toString()) != 74) {
-        return Container();
-      }
-
-      return Positioned(
-        left: x1,
-        top: y1,
-        width: boxWidth,
-        height: boxHeight,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.pink, width: 2.0),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  Widget buildOptimalBoxOverlay(Size screen) {
-    double optimalWidth = screen.width * widthCoverage;
-    double optimalHeight = screen.height * heightCoverage;
-    double x1 = (screen.width - optimalWidth) / 2;
-    double y1 = (screen.height - optimalHeight) / 2;
-
-    return Positioned(
-      left: x1,
-      top: y1,
-      width: optimalWidth,
-      height: optimalHeight,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.green, width: 2.0),
-        ),
-        /*
-        child: Center(
-          child: CustomPaint(
-            painter: CrosshairPainter(),
-            size: Size(optimalWidth, optimalHeight),
-          ),
-        ),*/
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     _screenSize = MediaQuery.of(context).size;
@@ -306,37 +243,8 @@ class _YoloVideoState extends State<YoloVideo> {
               fit: StackFit.expand,
               children: [
                 CameraPreview(controller),
-                buildOptimalBoxOverlay(_screenSize),
-                ...displayBoxes(_screenSize),
               ],
             ),
     );
   }
 }
-
-
-/*
-/// A simple custom painter to draw crosshair lines at the center.
-class CrosshairPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = Colors.greenAccent
-      ..strokeWidth = 2;
-
-    final double centerX = size.width / 2;
-    final double centerY = size.height / 2;
-    final double markerSize = 20;
-
-    // Horizontal line
-    canvas.drawLine(Offset(centerX - markerSize, centerY),
-        Offset(centerX + markerSize, centerY), paint);
-    // Vertical line
-    canvas.drawLine(Offset(centerX, centerY - markerSize),
-        Offset(centerX, centerY + markerSize), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-*/
