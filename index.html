@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonar Book Alignment Demo</title>
+    <title>Sonar Book Alignment - Audiobooks Demo</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
     <!-- CocoSsd model for object detection -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --accent-color: #f39c12;
-            --dark-color: #2c3e50;
-            --light-color: #ecf0f1;
-            --danger-color: #e74c3c;
-            --warning-color: #f1c40f;
-            --info-color: #3498db;
-            --success-color: #2ecc71;
-            --perfect-color: rgba(46, 204, 113, 0.9);
-            --warning-color-bg: rgba(241, 196, 15, 0.9);
-            --danger-color-bg: rgba(231, 76, 60, 0.9);
+            --primary-color: #2d4057; /* Dark blue from Sonar logo */
+            --secondary-color: #4d91b8; /* Medium blue from site */
+            --accent-color: #e67e22; /* Orange from "LEARNING" text */
+            --light-accent: #6bc7f1; /* Light blue from "BUILD OCRU" */
+            --dark-color: #304a65; /* Darker blue for text */
+            --light-color: #f8f9fa; /* Light background */
+            --button-color: #70a7c4; /* Button blue */
+            --success-color: #2ecc71; /* Green for success */
+            --warning-color: #f1c40f; /* Yellow for warnings */
+            --danger-color: #e74c3c; /* Red for errors */
+            --perfect-color: rgba(46, 204, 113, 0.9); /* Semi-transparent green */
+            --warning-color-bg: rgba(241, 196, 15, 0.9); /* Semi-transparent yellow */
+            --danger-color-bg: rgba(231, 76, 60, 0.9); /* Semi-transparent red */
         }
         
         body {
-            font-family: 'Roboto', 'Prompt', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: var(--light-color);
             color: var(--dark-color);
             padding: 0;
@@ -46,21 +47,51 @@
         }
         
         .header {
-            background-color: var(--dark-color);
-            color: white;
+            background-color: white;
+            color: var(--primary-color);
             padding: 1rem 0;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #eaeaea;
         }
         
         .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         
-        .brand-icon {
-            font-size: 1.8rem;
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .main-title {
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin: 2rem 0;
+        }
+        
+        .sub-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .sub-title .blue-text {
+            color: var(--light-accent);
+        }
+        
+        .sub-title .orange-text {
             color: var(--accent-color);
         }
         
@@ -68,7 +99,7 @@
             position: relative;
             max-width: 100%;
             margin: 0 auto;
-            border: 3px solid var(--dark-color);
+            border: 3px solid var(--primary-color);
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -153,7 +184,7 @@
             border: none;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             transition: all 0.3s ease;
             overflow: hidden;
         }
@@ -164,7 +195,7 @@
         }
         
         .card-header {
-            background-color: var(--dark-color);
+            background-color: var(--primary-color);
             color: white;
             font-weight: 600;
             display: flex;
@@ -178,7 +209,7 @@
         }
         
         .controls {
-            margin: 10px auto;
+            margin: 15px auto;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -190,7 +221,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 500;
             transition: all 0.2s ease;
@@ -206,14 +237,73 @@
             border-color: var(--primary-color);
         }
         
-        .btn-success {
+        .btn-primary:hover {
+            background-color: var(--dark-color);
+            border-color: var(--dark-color);
+        }
+        
+        .btn-secondary {
             background-color: var(--secondary-color);
             border-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #407ba0;
+            border-color: #407ba0;
         }
         
         .btn-warning {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
+        }
+        
+        .btn-warning:hover {
+            background-color: #d35400;
+            border-color: #d35400;
+        }
+        
+        .btn-demo {
+            background-color: var(--button-color);
+            border-color: var(--button-color);
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-demo:hover {
+            background-color: #5c93af;
+            border-color: #5c93af;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-ocr {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            padding: 16px 30px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 250px;
+        }
+        
+        .btn-ocr:hover {
+            background-color: #d35400;
+            border-color: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         
         .feature-item {
@@ -233,7 +323,7 @@
         .feature-icon {
             font-size: 1.2rem;
             width: 30px;
-            color: var(--primary-color);
+            color: var(--secondary-color);
             text-align: center;
         }
         
@@ -263,7 +353,7 @@
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 5px;
-            color: var(--primary-color);
+            color: var(--secondary-color);
         }
         
         .stat-label {
@@ -283,7 +373,7 @@
         
         .setting-value {
             font-weight: bold;
-            color: var(--primary-color);
+            color: var(--secondary-color);
             min-width: 40px;
             text-align: right;
         }
@@ -293,7 +383,7 @@
         }
         
         .form-range::-webkit-slider-thumb {
-            background: var(--primary-color);
+            background: var(--secondary-color);
         }
         
         .loading-screen {
@@ -302,7 +392,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(44, 62, 80, 0.9);
+            background-color: var(--primary-color);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -326,15 +416,15 @@
         }
         
         .footer {
-            background-color: var(--dark-color);
+            background-color: var(--primary-color);
             color: var(--light-color);
-            padding: 1rem 0;
-            margin-top: 1rem;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
             text-align: center;
         }
         
         .footer a {
-            color: var(--accent-color);
+            color: var(--light-accent);
             text-decoration: none;
         }
         
@@ -360,6 +450,14 @@
             .status-overlay {
                 font-size: 18px;
                 padding: 8px 12px;
+            }
+            
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .sub-title {
+                font-size: 1.2rem;
             }
         }
         
@@ -419,7 +517,7 @@
         
         .guide-rect {
             position: absolute;
-            border: 3px dashed #f39c12;
+            border: 3px dashed var(--accent-color);
             box-sizing: border-box;
         }
         
@@ -478,22 +576,6 @@
             opacity: 1;
         }
         
-        /* Future sections placeholders */
-        .future-feature-section {
-            border: 2px dashed #bdc3c7;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: rgba(189, 195, 199, 0.1);
-            text-align: center;
-        }
-        
-        .future-feature-icon {
-            font-size: 30px;
-            color: #bdc3c7;
-            margin-bottom: 15px;
-        }
-        
         /* Alert feedback */
         .alert-feedback {
             position: fixed;
@@ -514,17 +596,6 @@
         /* Thai language specific styles */
         .thai-text {
             font-family: 'Prompt', sans-serif;
-        }
-        
-        /* Settings Section Heading */
-        .settings-heading {
-            position: relative;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-            font-weight: 500;
-            color: var(--dark-color);
-            border-bottom: 1px solid #eee;
-            font-size: 1rem;
         }
         
         /* Camera UI Controls */
@@ -569,10 +640,6 @@
             text-align: center;
         }
         
-        .camera-ui-controls .form-range::-webkit-slider-thumb {
-            background-color: var(--warning-color);
-        }
-        
         .camera-ui-toggle {
             position: absolute;
             bottom: 20px;
@@ -600,136 +667,74 @@
             display: none !important;
         }
         
-        /* High contrast mode for accessibility */
-        .high-contrast .status-overlay {
-            background-color: black;
-            color: white;
-            border: 3px solid yellow;
+        /* OCR Styles */
+        .ocr-highlighted-text {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-radius: 3px;
+            padding: 2px 4px;
+            margin: 2px 0;
+            display: inline-block;
         }
         
-        .high-contrast .camera-ui-controls {
-            background-color: black;
-            border: 3px solid yellow;
+        .ocr-word {
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
         }
         
-        .high-contrast .guide-rect {
-            border: 5px solid yellow;
+        .ocr-word:hover {
+            background-color: rgba(52, 152, 219, 0.2);
         }
         
-        .high-contrast .direction-arrow {
-            background-color: black;
-            border: 3px solid yellow;
-        }
-        
-        /* Larger font and elements for accessibility */
-        .accessibility-mode .status-overlay {
-            font-size: 28px;
-            padding: 15px 20px;
-        }
-        
-        .accessibility-mode .camera-ui-controls {
-            padding: 20px;
-        }
-        
-        .accessibility-mode .camera-ui-controls .control-label {
-            font-size: 20px;
-        }
-        
-        .accessibility-mode .guide-text {
-            font-size: 20px;
-            padding: 10px 15px;
-        }
-        
-        .accessibility-mode .movement-indicator {
-            width: 120px;
-            height: 120px;
-            font-size: 50px;
-            margin-top: -60px;
-            margin-left: -60px;
-        }
-        
-        /* Settings panel */
-        .settings-panel {
-            position: fixed;
-            right: -320px;
-            top: 0;
-            width: 300px;
-            height: 100vh;
-            background-color: white;
-            z-index: 999;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-        }
-        
-        .settings-panel.active {
-            right: 0;
-        }
-        
-        .settings-close {
+        .ocr-capture-area {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
-            cursor: pointer;
+            border: 2px dashed var(--accent-color);
+            pointer-events: none;
+            z-index: 7;
+            display: none;
         }
         
-        /* Settings panel toggle */
-        .settings-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--dark-color);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 1000;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .settings-toggle:hover {
-            transform: scale(1.1);
-        }
-        
-        /* Accessibility panel */
-        .accessibility-panel {
-            position: fixed;
-            left: -320px;
+        .ocr-capture-flash {
+            position: absolute;
             top: 0;
-            width: 300px;
-            height: 100vh;
-            background-color: white;
-            z-index: 999;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-        }
-        
-        .accessibility-panel.active {
             left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 8;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
         
-        .accessibility-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
-            cursor: pointer;
+        .ocr-flash-active {
+            opacity: 1;
+            animation: ocr-flash 0.5s ease-out;
         }
         
-        .accessibility-toggle {
+        @keyframes ocr-flash {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        #ocr-preview {
+            background-color: #f8f9fa;
+            border-color: #dee2e6 !important;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .ocr-text-thai {
+            font-family: 'Prompt', sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Panel buttons */
+        .panel-button {
             position: fixed;
             bottom: 20px;
-            left: 20px;
             background-color: var(--primary-color);
             color: white;
             width: 50px;
@@ -745,8 +750,116 @@
             transition: all 0.3s ease;
         }
         
-        .accessibility-toggle:hover {
+        .panel-button:hover {
             transform: scale(1.1);
+        }
+        
+        .settings-toggle {
+            right: 20px;
+        }
+        
+        .accessibility-toggle {
+            left: 20px;
+            background-color: var(--secondary-color);
+        }
+        
+        /* Panels */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .panel-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        
+        .settings-panel {
+            right: -320px;
+        }
+        
+        .settings-panel.active {
+            right: 0;
+        }
+        
+        .accessibility-panel {
+            left: -320px;
+        }
+        
+        .accessibility-panel.active {
+            left: 0;
+        }
+        
+        /* Section headings */
+        .settings-heading {
+            position: relative;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            font-size: 1rem;
+        }
+        
+        /* Navbar menu */
+        .navbar-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .navbar-menu a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-menu a:hover {
+            background-color: rgba(45, 64, 87, 0.05);
+        }
+        
+        /* Demo box styling */
+        .demo-box {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        /* OCR Result area styling */
+        .ocr-result-card {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .ocr-result-header {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .ocr-result-body {
+            padding: 20px;
+            background-color: white;
         }
     </style>
 </head>
@@ -754,7 +867,7 @@
     <!-- Loading Screen -->
     <div id="loading-screen" class="loading-screen">
         <div class="loading-spinner"></div>
-        <h3>Loading Sonar Book Alignment Demo</h3>
+        <h3>Loading Sonar Book Alignment</h3>
         <p id="loading-progress">Preparing camera and AI models...</p>
     </div>
 
@@ -769,14 +882,29 @@
     <!-- Header -->
     <div class="header">
         <div class="app-container">
-            <div class="brand">
-                <div class="brand-icon"><i class="fas fa-book-reader"></i></div>
-                <h1 class="mb-0">Sonar Book Alignment</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="brand">
+                    <img src="https://i.imgur.com/gNqAhxP.png" alt="Sonar Audiobooks" class="brand-logo">
+                    <h1 class="brand-name">SONAR AUDIOBOOKS</h1>
+                </div>
+                <div class="navbar-menu">
+                    <a href="#">Home</a>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact us</a>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="app-container">
+        <!-- Title Section -->
+        <h1 class="main-title">SONAR-AUDIOBOOKS</h1>
+        <h2 class="sub-title">
+            <span class="blue-text">BUILD OCRU</span> 
+            <span class="orange-text">LEARNING</span>
+            <span class="blue-text">THROUGH AUDIO BOOKS</span>
+        </h2>
+        
         <div class="row">
             <!-- Main Camera View -->
             <div class="col-lg-8 mb-4">
@@ -799,8 +927,12 @@
                         <i id="movement-icon" class="fas"></i>
                     </div>
                     
-                    <!-- Guide overlay with resizing handles -->
+                    <!-- Guide overlay -->
                     <div id="guide-overlay" class="guide-overlay"></div>
+                    
+                    <!-- OCR capture area and flash -->
+                    <div id="ocr-capture-area" class="ocr-capture-area"></div>
+                    <div id="ocr-capture-flash" class="ocr-capture-flash"></div>
                     
                     <!-- Camera UI Controls -->
                     <div id="camera-ui-controls" class="camera-ui-controls">
@@ -823,11 +955,11 @@
                 </div>
                 
                 <!-- Camera Controls -->
-                <div class="controls">
+                <div class="controls mb-4">
                     <button id="camera-toggle" class="btn btn-primary">
                         <i class="fas fa-camera-rotate"></i> Switch Camera
                     </button>
-                    <button id="audio-toggle" class="btn btn-success">
+                    <button id="audio-toggle" class="btn btn-secondary">
                         <i class="fas fa-volume-high"></i> Audio
                     </button>
                     <button id="snapshot-btn" class="btn btn-warning">
@@ -841,32 +973,66 @@
                     </button>
                 </div>
                 
-                <!-- Future Feature Placeholders -->
-                <div class="row mt-4">
-                    <!-- OCR Demo Placeholder -->
-                    <div class="col-md-6 mb-3">
-                        <div class="future-feature-section">
-                            <div class="future-feature-icon">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <h5>OCR Demo</h5>
-                            <p class="text-muted">Space reserved for future OCR demonstration features.</p>
-                        </div>
+                <!-- OCR Button - Prominent and Easy to Click -->
+                <button id="ocr-capture-btn" class="btn btn-ocr">
+                    <i class="fas fa-camera me-2"></i> Capture Text
+                </button>
+                
+                <!-- OCR Area -->
+                <div class="ocr-result-card">
+                    <div class="ocr-result-header">
+                        <i class="fas fa-file-alt me-2"></i> OCR Results
                     </div>
-                    
-                    <!-- TTS Demo Placeholder -->
-                    <div class="col-md-6 mb-3">
-                        <div class="future-feature-section">
-                            <div class="future-feature-icon">
-                                <i class="fas fa-volume-up"></i>
+                    <div class="ocr-result-body">
+                        <div id="ocr-status" class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> 
+                            Loading OCR functionality...
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="form-check form-switch ms-2">
+                                <input class="form-check-input" type="checkbox" id="ocr-auto-capture" checked>
+                                <label class="form-check-label" for="ocr-auto-capture">Auto-capture when aligned</label>
                             </div>
-                            <h5>TTS Demo</h5>
-                            <p class="text-muted">Space reserved for future Text-to-Speech demonstration features.</p>
+                        </div>
+                        
+                        <div class="d-flex mb-3">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="ocr-lang" id="ocr-lang-tha" value="tha" checked>
+                                <label class="form-check-label" for="ocr-lang-tha">
+                                    <span class="thai-text">ไทย</span> (Thai)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="ocr-lang" id="ocr-lang-eng" value="eng">
+                                <label class="form-check-label" for="ocr-lang-eng">
+                                    English
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="ocr-progress" class="progress mb-3" style="display: none;">
+                            <div id="ocr-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                role="progressbar" style="width: 0%" 
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div id="ocr-preview" class="border rounded mb-3 p-3" style="min-height: 150px; max-height: 300px; overflow-y: auto; display: none;">
+                            <div id="ocr-text" class="thai-text"></div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button id="ocr-copy-btn" class="btn btn-sm btn-outline-secondary me-2" disabled>
+                                <i class="fas fa-copy me-1"></i> Copy
+                            </button>
+                            <button id="ocr-speak-btn" class="btn btn-sm btn-outline-secondary" disabled>
+                                <i class="fas fa-volume-up me-1"></i> Speak
+                            </button>
                         </div>
                     </div>
                 </div>
                 
-                <!-- About Section (Collapsed by default) -->
+                <!-- About Section -->
                 <div class="accordion mt-4" id="aboutAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="aboutHeading">
@@ -949,7 +1115,8 @@
                             <li>Align it with the yellow rectangle</li>
                             <li>Follow the audio and visual guidance</li>
                             <li>Green status means perfect alignment</li>
-                            <li>Ensure good lighting for best results</li>
+                            <li>Press the "Capture Text" button or wait for auto-capture</li>
+                            <li>OCR will extract text from the aligned book</li>
                         </ol>
                         
                         <div class="alert alert-info mt-3">
@@ -958,18 +1125,24 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Demo Trial Button -->
+                <div class="demo-box">
+                    <h4 class="mb-3">Want to try more features?</h4>
+                    <button class="btn btn-demo">DEMO TRIAL</button>
+                </div>
             </div>
         </div>
     </div>
     
     <!-- Settings Toggle -->
-    <div id="settings-toggle" class="settings-toggle">
+    <div id="settings-toggle" class="panel-button settings-toggle">
         <i class="fas fa-cog"></i>
     </div>
     
     <!-- Settings Panel -->
-    <div id="settings-panel" class="settings-panel">
-        <div id="settings-close" class="settings-close">
+    <div id="settings-panel" class="side-panel settings-panel">
+        <div id="settings-close" class="panel-close">
             <i class="fas fa-times"></i>
         </div>
         <h4 class="mb-4">Settings</h4>
@@ -1061,13 +1234,13 @@
     </div>
     
     <!-- Accessibility Toggle -->
-    <div id="accessibility-toggle" class="accessibility-toggle">
+    <div id="accessibility-toggle" class="panel-button accessibility-toggle">
         <i class="fas fa-universal-access"></i>
     </div>
     
     <!-- Accessibility Panel -->
-    <div id="accessibility-panel" class="accessibility-panel">
-        <div id="accessibility-close" class="accessibility-close">
+    <div id="accessibility-panel" class="side-panel accessibility-panel">
+        <div id="accessibility-close" class="panel-close">
             <i class="fas fa-times"></i>
         </div>
         <h4 class="mb-4">Accessibility Options</h4>
@@ -1283,6 +1456,21 @@
         const statDetections = document.getElementById('stat-detections');
         const statConfidence = document.getElementById('stat-confidence');
         
+        // OCR elements
+        const ocrCaptureBtn = document.getElementById('ocr-capture-btn');
+        const ocrAutoCapture = document.getElementById('ocr-auto-capture');
+        const ocrLangTha = document.getElementById('ocr-lang-tha');
+        const ocrLangEng = document.getElementById('ocr-lang-eng');
+        const ocrStatus = document.getElementById('ocr-status');
+        const ocrPreview = document.getElementById('ocr-preview');
+        const ocrText = document.getElementById('ocr-text');
+        const ocrProgress = document.getElementById('ocr-progress');
+        const ocrProgressBar = document.getElementById('ocr-progress-bar');
+        const ocrCopyBtn = document.getElementById('ocr-copy-btn');
+        const ocrSpeakBtn = document.getElementById('ocr-speak-btn');
+        const ocrCaptureArea = document.getElementById('ocr-capture-area');
+        const ocrCaptureFlash = document.getElementById('ocr-capture-flash');
+        
         // State
         let model;
         let facingMode = 'user'; // or 'environment'
@@ -1304,6 +1492,16 @@
         let alertTimeout;
         let repeatTimeout;
         let isComputer = false;
+        
+        // OCR variables
+        let ocrInitialized = false;
+        let ocrProcessing = false;
+        let ocrLastResult = '';
+        let ocrAutoCaptureEnabled = true;
+        let ocrLanguage = 'tha';
+        let ocrWorker = null;
+        let lastOCRCaptureTime = 0;
+        let tesseractLoaded = false;
         
         // Status colors
         const statusColors = {
@@ -1368,6 +1566,9 @@
                 // Start detection loop
                 detectObjects();
                 
+                // Initialize OCR (load dynamically to avoid blocking)
+                loadTesseract();
+                
                 // Hide loading screen
                 loadingScreen.style.display = 'none';
                 
@@ -1387,6 +1588,54 @@
                         <button class="btn btn-primary mt-3" onclick="location.reload()">Try Again</button>
                     </div>
                 `;
+            }
+        }
+        
+        // Dynamic loading of Tesseract.js
+        function loadTesseract() {
+            updateOCRStatus('loading', 'Loading OCR library...');
+            
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js';
+            script.async = true;
+            
+            script.onload = function() {
+                console.log('Tesseract.js loaded successfully');
+                tesseractLoaded = true;
+                setTimeout(() => {
+                    initializeOCR();
+                }, 1000);
+            };
+            
+            script.onerror = function() {
+                console.error('Failed to load Tesseract.js');
+                updateOCRStatus('error', 'Failed to load OCR library. Please try again later.');
+            };
+            
+            document.body.appendChild(script);
+        }
+        
+        // Initialize OCR
+        async function initializeOCR() {
+            if (!tesseractLoaded || typeof Tesseract === 'undefined') {
+                updateOCRStatus('error', 'OCR library not available. Try refreshing the page.');
+                return;
+            }
+            
+            try {
+                updateOCRStatus('initializing', 'Initializing OCR engine...');
+                
+                ocrWorker = Tesseract.createWorker();
+                await ocrWorker.load();
+                await ocrWorker.loadLanguage('tha');
+                await ocrWorker.initialize('tha');
+                
+                ocrInitialized = true;
+                updateOCRStatus('ready', 'OCR ready. Align a book and press "Capture Text".');
+                
+            } catch (error) {
+                console.error('Error initializing OCR:', error);
+                updateOCRStatus('error', 'OCR initialization failed. Please try again later.');
             }
         }
         
@@ -1785,6 +2034,17 @@
                     currentState = newState;
                     lastInstructionTime = currentTime;
                     
+                    // Auto-capture OCR when alignment is perfect
+                    if (newState === 'perfect' && ocrInitialized && !ocrProcessing && 
+                        ocrAutoCapture && ocrAutoCapture.checked &&
+                        (currentTime - lastOCRCaptureTime > 5000)) {
+                        
+                        setTimeout(() => {
+                            captureText();
+                            lastOCRCaptureTime = currentTime;
+                        }, 500);
+                    }
+                    
                     // Set up repeat instructions if enabled
                     if (config.repeatInstructions && newState !== 'perfect') {
                         if (repeatTimeout) {
@@ -1997,10 +2257,10 @@
                 
                 // Try to find a Thai voice
                 const voices = window.speechSynthesis.getVoices();
-                const thaiVoice = voices.find(voice => voice.lang.includes(lang));
+                const voiceForLang = voices.find(voice => voice.lang.includes(lang));
                 
-                if (thaiVoice) {
-                    utterance.voice = thaiVoice;
+                if (voiceForLang) {
+                    utterance.voice = voiceForLang;
                 }
                 
                 // Set rate and pitch from accessibility settings
@@ -2012,7 +2272,224 @@
             }
         }
         
-        // Take a snapshot
+        // Capture text from current video frame
+        async function captureText() {
+            if (!tesseractLoaded || typeof Tesseract === 'undefined') {
+                showAlert('OCR not loaded yet. Please wait or refresh the page.', 'warning');
+                return;
+            }
+            
+            if (!ocrInitialized) {
+                showAlert('OCR initializing. Please wait a moment...', 'info');
+                await initializeOCR();
+            }
+            
+            if (ocrProcessing) {
+                showAlert('OCR is already processing an image', 'info');
+                return;
+            }
+            
+            try {
+                ocrProcessing = true;
+                updateOCRStatus('processing', 'Processing image...');
+                showOCRProgress(10);
+                
+                // Show visual feedback
+                showOCRCaptureArea();
+                showOCRCaptureFlash();
+                
+                // Create a canvas with the current video frame
+                const captureCanvas = document.createElement('canvas');
+                const ctx = captureCanvas.getContext('2d');
+                
+                // Get the area inside the target rectangle for better OCR results
+                captureCanvas.width = targetArea.width;
+                captureCanvas.height = targetArea.height;
+                
+                // Draw only the region inside the target rectangle
+                ctx.drawImage(
+                    video, 
+                    targetArea.x, targetArea.y, targetArea.width, targetArea.height, 
+                    0, 0, captureCanvas.width, captureCanvas.height
+                );
+                
+                showOCRProgress(30);
+                
+                // Get image data URL
+                const imageData = captureCanvas.toDataURL('image/png');
+                
+                showOCRProgress(40);
+                
+                // Configure OCR options based on language
+                const ocrOptions = {
+                    lang: ocrLanguage
+                };
+                
+                // For Thai, use settings optimized for Thai script
+                if (ocrLanguage === 'tha') {
+                    ocrOptions.tessedit_char_whitelist = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮฤฦะัาำิีึืุูเแโใไ็่้๊๋์ๆฯ.,;:\'"!@#$%^&*(){}[]<>|_+-= ';
+                    ocrOptions.preserve_interword_spaces = '1';
+                }
+                
+                showOCRProgress(60);
+                
+                // Recognize text
+                const result = await ocrWorker.recognize(imageData, ocrOptions);
+                
+                showOCRProgress(90);
+                
+                // Process the result
+                const extractedText = result.data.text.trim();
+                
+                // Display result
+                if (extractedText) {
+                    // Set text with proper language
+                    ocrText.className = ocrLanguage === 'tha' ? 'thai-text' : '';
+                    ocrText.innerHTML = extractedText.replace(/\n/g, '<br>');
+                    
+                    // Show preview
+                    ocrPreview.style.display = 'block';
+                    
+                    // Enable buttons
+                    ocrCopyBtn.disabled = false;
+                    ocrSpeakBtn.disabled = false;
+                    
+                    // Store result
+                    ocrLastResult = extractedText;
+                    
+                    // Update status
+                    updateOCRStatus('success', 'Text extracted successfully!');
+                    
+                    // Vibration feedback on mobile
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(200);
+                    }
+                } else {
+                    // No text found
+                    updateOCRStatus('warning', 'No text found in the image');
+                    ocrPreview.style.display = 'block';
+                    ocrText.innerHTML = '<em class="text-muted">No text detected. Try adjusting the book position or lighting.</em>';
+                    
+                    // Disable buttons
+                    ocrCopyBtn.disabled = true;
+                    ocrSpeakBtn.disabled = true;
+                    
+                    // Clear result
+                    ocrLastResult = '';
+                }
+                
+                showOCRProgress(100);
+                
+            } catch (error) {
+                console.error('OCR error:', error);
+                updateOCRStatus('error', 'OCR error: ' + error.message);
+                
+                // Hide preview if error
+                ocrPreview.style.display = 'none';
+                
+                // Disable buttons
+                ocrCopyBtn.disabled = true;
+                ocrSpeakBtn.disabled = true;
+            } finally {
+                ocrProcessing = false;
+                
+                // Hide progress bar after delay
+                setTimeout(() => {
+                    ocrProgress.style.display = 'none';
+                }, 1000);
+            }
+        }
+        
+        // Update OCR status display
+        function updateOCRStatus(type, message) {
+            if (!ocrStatus) return;
+            
+            ocrStatus.className = 'alert';
+            switch(type) {
+                case 'loading':
+                case 'initializing':
+                case 'processing':
+                    ocrStatus.classList.add('alert-info');
+                    ocrStatus.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> ${message}`;
+                    break;
+                case 'ready':
+                    ocrStatus.classList.add('alert-info');
+                    ocrStatus.innerHTML = `<i class="fas fa-info-circle me-2"></i> ${message}`;
+                    break;
+                case 'success':
+                    ocrStatus.classList.add('alert-success');
+                    ocrStatus.innerHTML = `<i class="fas fa-check-circle me-2"></i> ${message}`;
+                    break;
+                case 'warning':
+                    ocrStatus.classList.add('alert-warning');
+                    ocrStatus.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${message}`;
+                    break;
+                case 'error':
+                    ocrStatus.classList.add('alert-danger');
+                    ocrStatus.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i> ${message}`;
+                    break;
+            }
+        }
+        
+        // Show OCR progress bar
+        function showOCRProgress(percentage) {
+            if (!ocrProgress || !ocrProgressBar) return;
+            
+            ocrProgress.style.display = 'flex';
+            ocrProgressBar.style.width = `${percentage}%`;
+            ocrProgressBar.setAttribute('aria-valuenow', percentage);
+        }
+        
+        // Show OCR capture area
+        function showOCRCaptureArea() {
+            if (!ocrCaptureArea) return;
+            
+            ocrCaptureArea.style.left = targetArea.x + 'px';
+            ocrCaptureArea.style.top = targetArea.y + 'px';
+            ocrCaptureArea.style.width = targetArea.width + 'px';
+            ocrCaptureArea.style.height = targetArea.height + 'px';
+            ocrCaptureArea.style.display = 'block';
+            
+            setTimeout(() => {
+                ocrCaptureArea.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Show OCR capture flash effect
+        function showOCRCaptureFlash() {
+            if (!ocrCaptureFlash) return;
+            
+            ocrCaptureFlash.classList.add('ocr-flash-active');
+            
+            setTimeout(() => {
+                ocrCaptureFlash.classList.remove('ocr-flash-active');
+            }, 500);
+        }
+        
+        // Copy OCR result to clipboard
+        function copyOCRResult() {
+            if (!ocrLastResult) return;
+            
+            navigator.clipboard.writeText(ocrLastResult)
+                .then(() => {
+                    showAlert('Text copied to clipboard', 'success');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                    showAlert('Error copying text', 'danger');
+                });
+        }
+        
+        // Speak OCR result using text-to-speech
+        function speakOCRResult() {
+            if (!ocrLastResult) return;
+            
+            // Use the language from OCR detection
+            const langCode = ocrLanguage === 'tha' ? 'th' : 'en';
+            speak(ocrLastResult, langCode);
+        }
+        
+        // Take a snapshot of current video frame
         function takeSnapshot() {
             try {
                 // Draw current frame to a temporary canvas
@@ -2145,7 +2622,7 @@
         
         // Ensure voices are loaded (for Safari)
         function loadVoices() {
-            // Compatibility for some browsers
+            // Get voices for text-to-speech
             window.speechSynthesis.getVoices();
             
             // For browsers that need onvoiceschanged
@@ -2156,136 +2633,268 @@
             }
         }
         
-        // Event Listeners
+        // EVENT LISTENERS
         
-        // Toggle camera
-        cameraToggle.addEventListener('click', async () => {
-            // Show loading indicator
-            statusOverlay.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Switching camera...';
-            
-            // Toggle facing mode
-            facingMode = facingMode === 'user' ? 'environment' : 'user';
-            cameraToggle.innerHTML = facingMode === 'user' ? 
-                '<i class="fas fa-camera-rotate"></i> Front' : 
-                '<i class="fas fa-camera-rotate"></i> Back';
-            
-            // Restart camera (with small delay to show loading status)
-            setTimeout(async () => {
-                try {
-                    await setupCamera();
-                    showAlert('Camera switched successfully', 'success');
-                } catch (error) {
-                    console.error('Error toggling camera:', error);
-                    showAlert('Error switching camera', 'danger');
+        // OCR Button (main capture button)
+        if (ocrCaptureBtn) {
+            ocrCaptureBtn.addEventListener('click', () => {
+                if (!tesseractLoaded) {
+                    showAlert('OCR library is still loading. Please wait...', 'info');
+                    return;
                 }
-            }, 500);
-        });
+                
+                if (!ocrInitialized) {
+                    showAlert('Initializing OCR. Please wait...', 'info');
+                    initializeOCR().then(() => {
+                        captureText();
+                    });
+                } else {
+                    captureText();
+                }
+            });
+        }
         
-        // Toggle audio
-        audioToggle.addEventListener('click', () => {
-            audioEnabled = !audioEnabled;
-            audioToggle.innerHTML = audioEnabled ? 
-                '<i class="fas fa-volume-high"></i> Audio' : 
-                '<i class="fas fa-volume-xmark"></i> Muted';
-            audioToggle.className = audioEnabled ? 'btn btn-success' : 'btn btn-secondary';
-            
-            showAlert(audioEnabled ? 'Audio enabled' : 'Audio disabled', 'info');
-        });
+        // OCR Language selection
+        if (ocrLangTha) {
+            ocrLangTha.addEventListener('change', () => {
+                if (ocrLangTha.checked) {
+                    ocrLanguage = 'tha';
+                    if (ocrInitialized && ocrWorker) {
+                        ocrWorker.loadLanguage('tha').then(() => {
+                            ocrWorker.initialize('tha');
+                        }).catch(err => {
+                            console.error('Error changing to Thai:', err);
+                        });
+                    }
+                }
+            });
+        }
         
-        // Take snapshot
-        snapshotBtn.addEventListener('click', takeSnapshot);
+        if (ocrLangEng) {
+            ocrLangEng.addEventListener('change', () => {
+                if (ocrLangEng.checked) {
+                    ocrLanguage = 'eng';
+                    if (ocrInitialized && ocrWorker) {
+                        ocrWorker.loadLanguage('eng').then(() => {
+                            ocrWorker.initialize('eng');
+                        }).catch(err => {
+                            console.error('Error changing to English:', err);
+                        });
+                    }
+                }
+            });
+        }
         
-        // Fullscreen toggle
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        // OCR Copy and Speak buttons
+        if (ocrCopyBtn) {
+            ocrCopyBtn.addEventListener('click', copyOCRResult);
+        }
         
-        // Guide toggle
-        guideToggle.addEventListener('click', () => {
-            guideVisible = !guideVisible;
-            guideOverlay.style.display = guideVisible ? 'block' : 'none';
-            guideToggle.innerHTML = guideVisible ? 
-                '<i class="fas fa-eye-slash"></i> Hide' : 
-                '<i class="fas fa-ruler-combined"></i> Guide';
-            guideToggle.className = guideVisible ? 'btn btn-info' : 'btn btn-secondary';
-        });
+        if (ocrSpeakBtn) {
+            ocrSpeakBtn.addEventListener('click', speakOCRResult);
+        }
         
-        // Settings panel toggle
-        settingsToggle.addEventListener('click', () => {
-            settingsPanel.classList.toggle('active');
-        });
+        // Camera Toggle
+        if (cameraToggle) {
+            cameraToggle.addEventListener('click', async () => {
+                // Show loading indicator
+                statusOverlay.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Switching camera...';
+                
+                // Toggle facing mode
+                facingMode = facingMode === 'user' ? 'environment' : 'user';
+                
+                // Restart camera (with small delay to show loading status)
+                setTimeout(async () => {
+                    try {
+                        await setupCamera();
+                        showAlert('Camera switched successfully', 'success');
+                    } catch (error) {
+                        console.error('Error toggling camera:', error);
+                        showAlert('Error switching camera', 'danger');
+                    }
+                }, 500);
+            });
+        }
         
-        // Settings panel close
-        settingsClose.addEventListener('click', () => {
-            settingsPanel.classList.remove('active');
-        });
+        // Audio Toggle
+        if (audioToggle) {
+            audioToggle.addEventListener('click', () => {
+                audioEnabled = !audioEnabled;
+                audioToggle.innerHTML = audioEnabled ? 
+                    '<i class="fas fa-volume-high"></i> Audio' : 
+                    '<i class="fas fa-volume-xmark"></i> Muted';
+                
+                // Update button color
+                if (audioEnabled) {
+                    audioToggle.classList.remove('btn-outline-secondary');
+                    audioToggle.classList.add('btn-secondary');
+                } else {
+                    audioToggle.classList.remove('btn-secondary');
+                    audioToggle.classList.add('btn-outline-secondary');
+                }
+                
+                showAlert(audioEnabled ? 'Audio enabled' : 'Audio disabled', 'info');
+            });
+        }
         
-        // Accessibility panel toggle
-        accessibilityToggle.addEventListener('click', () => {
-            accessibilityPanel.classList.toggle('active');
-        });
+        // Snapshot Button
+        if (snapshotBtn) {
+            snapshotBtn.addEventListener('click', takeSnapshot);
+        }
         
-        // Accessibility panel close
-        accessibilityClose.addEventListener('click', () => {
-            accessibilityPanel.classList.remove('active');
-        });
+        // Fullscreen Toggle
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+        }
         
-        // Reset settings
-        resetSettings.addEventListener('click', resetToDefaults);
+        // Guide Toggle
+        if (guideToggle) {
+            guideToggle.addEventListener('click', () => {
+                guideVisible = !guideVisible;
+                guideOverlay.style.display = guideVisible ? 'block' : 'none';
+                
+                // Update button text
+                guideToggle.innerHTML = guideVisible ? 
+                    '<i class="fas fa-eye-slash"></i> Hide' : 
+                    '<i class="fas fa-ruler-combined"></i> Guide';
+            });
+        }
         
-        // Settings change events
-        confidenceThreshold.addEventListener('input', () => {
-            confidenceValue.textContent = confidenceThreshold.value;
-            updateConfig();
-        });
+        // Settings Panel Toggle
+        if (settingsToggle) {
+            settingsToggle.addEventListener('click', () => {
+                settingsPanel.classList.toggle('active');
+            });
+        }
         
-        positionToleranceX.addEventListener('input', () => {
-            toleranceXValue.textContent = positionToleranceX.value;
-            updateConfig();
-        });
+        // Settings Panel Close
+        if (settingsClose) {
+            settingsClose.addEventListener('click', () => {
+                settingsPanel.classList.remove('active');
+            });
+        }
         
-        positionToleranceY.addEventListener('input', () => {
-            toleranceYValue.textContent = positionToleranceY.value;
-            updateConfig();
-        });
+        // Accessibility Panel Toggle
+        if (accessibilityToggle) {
+            accessibilityToggle.addEventListener('click', () => {
+                accessibilityPanel.classList.toggle('active');
+            });
+        }
         
-        minSizeRatio.addEventListener('input', () => {
-            minSizeValue.textContent = minSizeRatio.value;
-            updateConfig();
-        });
+        // Accessibility Panel Close
+        if (accessibilityClose) {
+            accessibilityClose.addEventListener('click', () => {
+                accessibilityPanel.classList.remove('active');
+            });
+        }
         
-        maxSizeRatio.addEventListener('input', () => {
-            maxSizeValue.textContent = maxSizeRatio.value;
-            updateConfig();
-        });
+        // Settings sliders and checkboxes
+        if (confidenceThreshold) {
+            confidenceThreshold.addEventListener('input', () => {
+                confidenceValue.textContent = confidenceThreshold.value;
+                config.detectionConfidence = parseFloat(confidenceThreshold.value);
+            });
+        }
         
-        // Direction reversal toggle
-        reverseDirections.addEventListener('change', () => {
-            config.reverseDirections = reverseDirections.checked;
-            showAlert(config.reverseDirections ? 
-                'Direction commands reversed' : 
-                'Direction commands set to default', 'info');
-        });
+        if (positionToleranceX) {
+            positionToleranceX.addEventListener('input', () => {
+                toleranceXValue.textContent = positionToleranceX.value;
+                config.positionThresholdXRatio = parseFloat(positionToleranceX.value);
+            });
+        }
         
-        // Other settings
-        detectionHighlight.addEventListener('change', updateConfig);
-        showCenterMarker.addEventListener('change', updateConfig);
-        showDirectionArrows.addEventListener('change', updateConfig);
+        if (positionToleranceY) {
+            positionToleranceY.addEventListener('input', () => {
+                toleranceYValue.textContent = positionToleranceY.value;
+                config.positionThresholdYRatio = parseFloat(positionToleranceY.value);
+            });
+        }
         
-        // Accessibility settings
-        highContrastMode.addEventListener('change', updateAccessibilityConfig);
-        largerElements.addEventListener('change', updateAccessibilityConfig);
+        if (minSizeRatio) {
+            minSizeRatio.addEventListener('input', () => {
+                minSizeValue.textContent = minSizeRatio.value;
+                config.minSizeRatio = parseFloat(minSizeRatio.value);
+            });
+        }
         
-        speechRate.addEventListener('input', () => {
-            speechRateValue.textContent = speechRate.value;
-            config.speechRate = parseFloat(speechRate.value);
-        });
+        if (maxSizeRatio) {
+            maxSizeRatio.addEventListener('input', () => {
+                maxSizeValue.textContent = maxSizeRatio.value;
+                config.maxSizeRatio = parseFloat(maxSizeRatio.value);
+            });
+        }
         
-        speechVolume.addEventListener('input', () => {
-            speechVolumeValue.textContent = speechVolume.value;
-            config.speechVolume = parseFloat(speechVolume.value);
-        });
+        // Other setting controls
+        if (reverseDirections) {
+            reverseDirections.addEventListener('change', () => {
+                config.reverseDirections = reverseDirections.checked;
+            });
+        }
         
-        repeatInstructions.addEventListener('change', updateAccessibilityConfig);
-        extraAudioCues.addEventListener('change', updateAccessibilityConfig);
+        if (detectionHighlight) {
+            detectionHighlight.addEventListener('change', () => {
+                config.highlightDetections = detectionHighlight.checked;
+            });
+        }
+        
+        if (showCenterMarker) {
+            showCenterMarker.addEventListener('change', () => {
+                config.showCenterMarker = showCenterMarker.checked;
+            });
+        }
+        
+        if (showDirectionArrows) {
+            showDirectionArrows.addEventListener('change', () => {
+                config.showDirectionArrows = showDirectionArrows.checked;
+            });
+        }
+        
+        // Reset settings button
+        if (resetSettings) {
+            resetSettings.addEventListener('click', resetToDefaults);
+        }
+        
+        // Accessibility settings controls
+        if (highContrastMode) {
+            highContrastMode.addEventListener('change', () => {
+                config.highContrastMode = highContrastMode.checked;
+                applyAccessibilitySettings();
+            });
+        }
+        
+        if (largerElements) {
+            largerElements.addEventListener('change', () => {
+                config.largerElements = largerElements.checked;
+                applyAccessibilitySettings();
+            });
+        }
+        
+        if (speechRate) {
+            speechRate.addEventListener('input', () => {
+                speechRateValue.textContent = speechRate.value;
+                config.speechRate = parseFloat(speechRate.value);
+            });
+        }
+        
+        if (speechVolume) {
+            speechVolume.addEventListener('input', () => {
+                speechVolumeValue.textContent = speechVolume.value;
+                config.speechVolume = parseFloat(speechVolume.value);
+            });
+        }
+        
+        if (repeatInstructions) {
+            repeatInstructions.addEventListener('change', () => {
+                config.repeatInstructions = repeatInstructions.checked;
+                config.instructionCooldown = config.repeatInstructions ? 2000 : 3000;
+            });
+        }
+        
+        if (extraAudioCues) {
+            extraAudioCues.addEventListener('change', () => {
+                config.extraAudioCues = extraAudioCues.checked;
+            });
+        }
         
         // Handle document fullscreen change
         document.addEventListener('fullscreenchange', () => {
@@ -2295,6 +2904,11 @@
                 fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Fullscreen';
             }
         });
+        
+        // Load voices for speech synthesis
+        if ('speechSynthesis' in window) {
+            loadVoices();
+        }
         
         // Initialize the app when document is loaded
         document.addEventListener('DOMContentLoaded', init);
